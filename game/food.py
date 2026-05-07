@@ -6,12 +6,17 @@ from settings import (
     GRID_COLUMNS,
     GRID_ROWS,
     OFFSET_X,
-    OFFSET_Y
+    OFFSET_Y,
+    APPLE_IMAGE_PATH
 )
 
 class Food:
     def __init__(self):
-        self.color = (220, 30, 30)
+        self.image = pygame.image.load(APPLE_IMAGE_PATH).convert_alpha()
+        self.image = pygame.transform.scale(
+            self.image,
+            (CELL_SIZE, CELL_SIZE)
+            )
         self.position = self.generate_position()
 
     def generate_position(self):
@@ -27,8 +32,4 @@ class Food:
         x = OFFSET_X + self.position[0] * CELL_SIZE
         y = OFFSET_Y + self.position[1] * CELL_SIZE
 
-        pygame.draw.rect(
-            screen,
-            self.color,
-            (x, y, CELL_SIZE, CELL_SIZE)
-        )
+        screen.blit(self.image, (x, y))

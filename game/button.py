@@ -2,26 +2,23 @@ import pygame
 
 
 class Button:
-    def __init__(self, text, center_x, center_y, width, height, font):
+    def __init__(self, text, center_x, center_y, width, height, font, image, hover_image):
         self.text = text
         self.font = font
 
         self.rect = pygame.Rect(0, 0, width, height)
         self.rect.center = (center_x, center_y)
 
-        self.color = (220, 220, 220)
-        self.hover_color = (180, 180, 180)
-        self.text_color = (0, 0, 0)
+        self.image = pygame.transform.scale(image, (width, height))
+        self.hover_image = pygame.transform.scale(hover_image, (width, height))
+
+        self.text_color = (70, 45, 20)
 
     def draw(self, screen):
         mouse_pos = pygame.mouse.get_pos()
 
-        if self.rect.collidepoint(mouse_pos):
-            color = self.hover_color
-        else:
-            color = self.color
-
-        pygame.draw.rect(screen, color, self.rect, border_radius=15)
+        image = self.hover_image if self.rect.collidepoint(mouse_pos) else self.image
+        screen.blit(image, self.rect)
 
         text_surface = self.font.render(self.text, True, self.text_color)
         text_rect = text_surface.get_rect(center=self.rect.center)

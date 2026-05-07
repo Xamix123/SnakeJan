@@ -16,36 +16,66 @@ from settings import (
     FPS,
     SNAKE_SPEED,
     BACKGROUND_COLOR,
-    GRID_COLOR
+    GRID_COLOR,
+    MUSIC_PATH,
+    SUMMER_BACKGROUND_PATH,
+    AUTUMN_BACKGROUND_PATH,
+    LOGO_IMAGE_PATH,
+    MENU_BACKGROUND_PATH,
+    BUTTON_IMAGE_PATH,
+    BUTTON_HOVER_IMAGE_PATH
 )
 
 
 class Game:
     def __init__(self):
+        pygame.init()
         self.state = "menu"
         self.menu_font = pygame.font.SysFont("Arial", 48)
-
-        button_width = WINDOW_WIDTH // 3
-        button_height = 70
-        center_x = WINDOW_WIDTH // 2
-
-        start_y = WINDOW_HEIGHT // 2 - 150
-        gap = 90
-
-        self.buttons = {
-            "play": Button("Play", center_x, start_y, button_width, button_height, self.menu_font),
-            "settings": Button("Settings", center_x, start_y + gap, button_width, button_height, self.menu_font),
-            "records": Button("Leaderboard", center_x, start_y + gap * 2, button_width, button_height, self.menu_font),
-            "exit": Button("Exit", center_x, start_y + gap * 3, button_width, button_height, self.menu_font),
-        }
-        
-        pygame.init()
 
         self.screen = pygame.display.set_mode(
             (WINDOW_WIDTH, WINDOW_HEIGHT),
             pygame.FULLSCREEN
         )
         pygame.display.set_caption("Snake")
+        self.menu_background = pygame.image.load(MENU_BACKGROUND_PATH).convert()
+        self.menu_background = pygame.transform.scale(
+            self.menu_background,
+            (WINDOW_WIDTH, WINDOW_HEIGHT)
+        )
+
+        self.button_image = pygame.image.load(BUTTON_IMAGE_PATH).convert_alpha()
+        self.button_hover_image = pygame.image.load(BUTTON_HOVER_IMAGE_PATH).convert_alpha()
+
+        self.logo_image = pygame.image.load(LOGO_IMAGE_PATH).convert_alpha()
+
+        logo_width = WINDOW_WIDTH // 3
+        logo_height = int(logo_width * self.logo_image.get_height() / self.logo_image.get_width())
+
+        self.logo_image = pygame.transform.scale(
+            self.logo_image,
+            (logo_width, logo_height)
+        )
+
+        self.logo_rect = self.logo_image.get_rect(
+            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 5)
+        )
+
+
+
+        button_width = WINDOW_WIDTH // 4
+        button_height = WINDOW_HEIGHT // 10
+
+        center_x = WINDOW_WIDTH // 2
+        start_y = WINDOW_HEIGHT // 2 - 40
+        gap = button_height + 20
+
+        self.buttons = {
+            "play": Button("Play", center_x, start_y, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
+            "settings": Button("Settings", center_x, start_y + gap, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
+            "records": Button("Leaderboard", center_x, start_y + gap * 2, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
+            "exit": Button("Exit", center_x, start_y + gap * 3, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
+        }
 
         self.clock = pygame.time.Clock()
         self.running = True
@@ -56,6 +86,20 @@ class Game:
         self.score = 0
         self.score_font = pygame.font.SysFont("Arial", 32)
         self.move_timer = 0
+
+        # music section initialization 
+        pygame.mixer.music.load(MUSIC_PATH)
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(-1)
+
+
+        #background
+        self.background = pygame.image.load(MENU_BACKGROUND_PATH).convert()
+
+        self.background = pygame.transform.scale(
+            self.background,
+            (WINDOW_WIDTH, WINDOW_HEIGHT)
+        )
 
     def run(self):
         while self.running:
@@ -96,10 +140,10 @@ class Game:
             self.state = "playing"
 
         elif self.buttons["settings"].is_clicked(event):
-            print("Настройки пока не реализованы")
+            print("Under development")
 
         elif self.buttons["records"].is_clicked(event):
-            print("Рекорды пока не реализованы")
+            print("Under development")
 
         elif self.buttons["exit"].is_clicked(event):
             self.running = False
@@ -151,14 +195,12 @@ class Game:
             self.game_over = True
             
     def draw(self):
-        self.screen.fill(BACKGROUND_COLOR)
+        self.screen.blit(self.background, (0, 0))
 
         if self.state == "menu":
             self.draw_menu()
 
         elif self.state == "playing":
-            self.draw_grid()
-
             self.food.draw(self.screen)
             self.snake.draw(self.screen)
 
@@ -170,17 +212,12 @@ class Game:
         pygame.display.flip()
 
     def draw_menu(self):
-        title_font = pygame.font.SysFont("Arial", 72)
+        self.screen.blit(self.menu_background, (0, 0))
 
-        title = title_font.render("SNAKE", True, (0, 0, 0))
-        title_rect = title.get_rect(
-            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 280)
-        )
-
-        self.screen.blit(title, title_rect)
+        self.screen.blit(self.logo_image, self.logo_rect)
 
         for button in self.buttons.values():
-            button.draw(self.screen)    
+            button.draw(self.screen)
         
     def draw_grid(self):
         for x in range(OFFSET_X, OFFSET_X + GAME_WIDTH + 1, CELL_SIZE):
