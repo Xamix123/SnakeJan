@@ -2,8 +2,10 @@ import pygame
 from snake import Snake
 from food import Food
 from button import Button
+from level_button import LevelButton
 
 from settings import (
+    AUTHOR,
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
     CELL_SIZE,
@@ -17,15 +19,25 @@ from settings import (
     SNAKE_SPEED,
     BACKGROUND_COLOR,
     GRID_COLOR,
-    MUSIC_PATH,
-    SUMMER_BACKGROUND_PATH,
-    AUTUMN_BACKGROUND_PATH,
+    MAIN_THEME_PATH,
+    LEADERBOARD_THEME_PATH,
+    FOOD_EAT_SOUND_PATH,
+    GAME_OVER_SOUND_PATH,
     LOGO_IMAGE_PATH,
     MENU_BACKGROUND_PATH,
     BUTTON_IMAGE_PATH,
-    BUTTON_HOVER_IMAGE_PATH
+    BUTTON_HOVER_IMAGE_PATH,
+    LEVEL_PANEL_PATH,
+    LEVELS,
+    GAME_OVER_PANEL_PATH,
+    LEADERBOARD_PANEL_PATH,
+    LEADERBOARD_TAB_PATH,
+    LEADERBOARD_TAB_HOVER_PATH,
+    LEADERBOARD_TAB_ACTIVE_PATH
 )
 
+
+#TODO класс избыточный необходимо раскидать его по подклассам и сделать более синтаксически корректным добавить комменты сгруппировать логику и вынести все что можно по разным классам а так же константы 
 
 class Game:
     def __init__(self):
@@ -61,21 +73,68 @@ class Game:
             center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 5)
         )
 
-
-
         button_width = WINDOW_WIDTH // 4
-        button_height = WINDOW_HEIGHT // 10
+        button_height = WINDOW_HEIGHT // 8
 
         center_x = WINDOW_WIDTH // 2
         start_y = WINDOW_HEIGHT // 2 - 40
-        gap = button_height + 20
+        gap = button_height + 30
 
         self.buttons = {
             "play": Button("Play", center_x, start_y, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
             "settings": Button("Settings", center_x, start_y + gap, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
-            "records": Button("Leaderboard", center_x, start_y + gap * 2, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
+            "leaderboard": Button("Leaderboard", center_x, start_y + gap * 2, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
             "exit": Button("Exit", center_x, start_y + gap * 3, button_width, button_height, self.menu_font, self.button_image, self.button_hover_image),
         }
+
+        self.level_panel = pygame.image.load(LEVEL_PANEL_PATH).convert_alpha()
+
+        panel_width = int(WINDOW_WIDTH * 0.75)
+        panel_height = int(panel_width * self.level_panel.get_height() / self.level_panel.get_width())
+
+        self.level_panel = pygame.transform.scale(
+            self.level_panel,
+            (panel_width, panel_height)
+        )
+
+        self.level_panel_rect = self.level_panel.get_rect(
+            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
+        )
+
+
+        level_size = panel_width // 6
+        gap = 40
+
+        levels = ["spring", "summer", "autumn", "winter"]
+
+        total_width = level_size * len(levels) + gap * (len(levels) - 1)
+
+        start_x = self.level_panel_rect.centerx - total_width // 2
+        start_y = self.level_panel_rect.centery - level_size // 2
+
+        self.level_buttons = {}
+
+        for index, level_key in enumerate(levels):
+            image = pygame.image.load(LEVELS[level_key]["panel"]).convert_alpha()
+            hover_image = pygame.image.load(LEVELS[level_key]["panel_hover"]).convert_alpha()
+
+            x = start_x + index * (level_size + gap)
+            y = start_y
+
+            self.level_buttons[level_key] = LevelButton(
+                level_key,
+                image,
+                hover_image,
+                x,
+                y,
+                level_size
+            )
+
+        self.game_over_screen = pygame.image.load(GAME_OVER_PANEL_PATH).convert_alpha()
+        self.game_over_rect = self.game_over_screen.get_rect(
+            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
+        )
+
 
         self.clock = pygame.time.Clock()
         self.running = True
@@ -86,11 +145,18 @@ class Game:
         self.score = 0
         self.score_font = pygame.font.SysFont("Arial", 32)
         self.move_timer = 0
+        self.selected_level = None
 
-        # music section initialization 
-        pygame.mixer.music.load(MUSIC_PATH)
+        # music section initialization TODO возможно стоит вынести в отдельный метод чтобы вызывать в нужный момент тип play main theme play шото там и тд
+        pygame.mixer.music.load(MAIN_THEME_PATH)
         pygame.mixer.music.set_volume(0.3)
         pygame.mixer.music.play(-1)
+
+        self.food_eat_sound = pygame.mixer.Sound(FOOD_EAT_SOUND_PATH)
+        self.food_eat_sound.set_volume(0.5) # TODO возможно получиться пределать под абстрактный звук посмотри во время рефакторинга
+
+        self.game_over_sound = pygame.mixer.Sound(GAME_OVER_SOUND_PATH)
+        self.game_over_sound.set_volume(0.5)
 
 
         #background
@@ -100,6 +166,41 @@ class Game:
             self.background,
             (WINDOW_WIDTH, WINDOW_HEIGHT)
         )
+
+        self.leaderboard_panel = pygame.image.load(LEADERBOARD_PANEL_PATH).convert_alpha()
+
+        leaderboard_width = int(WINDOW_WIDTH * 0.65)
+        leaderboard_height = int(
+            leaderboard_width * self.leaderboard_panel.get_height()
+            / self.leaderboard_panel.get_width()
+        )
+
+        self.leaderboard_panel = pygame.transform.scale(
+            self.leaderboard_panel,
+            (leaderboard_width, leaderboard_height)
+        )
+
+        self.leaderboard_rect = self.leaderboard_panel.get_rect(
+            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
+        )
+
+        self.leaderboard_tab = pygame.image.load(LEADERBOARD_TAB_PATH).convert_alpha()
+        self.leaderboard_tab_hover = pygame.image.load(LEADERBOARD_TAB_HOVER_PATH).convert_alpha()
+        self.leaderboard_tab_active = pygame.image.load(LEADERBOARD_TAB_ACTIVE_PATH).convert_alpha()
+
+        self.active_leaderboard_tab = "spring"
+
+        self.leaderboard_tabs = ["spring", "summer", "autumn", "winter", "random"]
+        self.leaderboard_tab_names = {
+            "spring": "Spring",
+            "summer": "Summer",
+            "autumn": "Autumn",
+            "winter": "Winter",
+            "random": "Random",
+        }
+
+        self.leaderboard_font = pygame.font.SysFont("Arial", 28)
+        self.leaderboard_score_font = pygame.font.SysFont("Arial", 34)
 
     def run(self):
         while self.running:
@@ -119,7 +220,7 @@ class Game:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    if self.state == "playing":
+                    if self.state in ("playing", "level_select", "leaderboard"):
                         self.state = "menu"
                     else:
                         self.running = False
@@ -133,17 +234,19 @@ class Game:
             elif self.state == "playing":
                 self.handle_game_events(event)
 
+            elif self.state == "level_select":
+                self.handle_level_select_events(event)
+
 
     def handle_menu_events(self, event):
         if self.buttons["play"].is_clicked(event):
-            self.restart()
-            self.state = "playing"
+            self.state = "level_select"
 
         elif self.buttons["settings"].is_clicked(event):
             print("Under development")
 
-        elif self.buttons["records"].is_clicked(event):
-            print("Under development")
+        elif self.buttons["leaderboard"].is_clicked(event):
+            self.state = "leaderboard"
 
         elif self.buttons["exit"].is_clicked(event):
             self.running = False
@@ -187,11 +290,14 @@ class Game:
         head = self.snake.body[0]
 
         if head == self.food.position:
+            self.food_eat_sound.play()
             self.snake.grow = True
-            self.score += 1
+            self.score += 10 # TODO change to constant
             self.food.respawn()
 
         if self.snake.check_collision():
+            self.game_over_sound.play()
+            pygame.mixer.music.stop()
             self.game_over = True
             
     def draw(self):
@@ -208,6 +314,10 @@ class Game:
 
             if self.game_over:
                 self.draw_game_over()
+        elif self.state == "level_select":
+            self.draw_level_select()
+        elif self.state == "leaderboard":
+            self.draw_leaderboard()
 
         pygame.display.flip()
 
@@ -217,6 +327,36 @@ class Game:
         self.screen.blit(self.logo_image, self.logo_rect)
 
         for button in self.buttons.values():
+            button.draw(self.screen)
+
+        author_font = pygame.font.Font(None, 64)
+
+        author_text = author_font.render(
+            f"Created by {AUTHOR}",
+            True,
+            (255, 255, 255) # TODO константа белый цвет
+        )
+
+        author_rect = author_text.get_rect(
+            bottomright=(WINDOW_WIDTH - 20, WINDOW_HEIGHT - 20) # размеры должны быть константами 
+        )
+
+        self.screen.blit(author_text, author_rect)
+
+    def handle_level_select_events(self, event):
+        for level_key, button in self.level_buttons.items():
+            if button.is_clicked(event):
+                self.apply_level(level_key)
+                self.restart()
+                self.state = "playing"
+
+
+    def draw_level_select(self):
+        self.screen.blit(self.menu_background, (0, 0))
+
+        self.screen.blit(self.level_panel, self.level_panel_rect)
+
+        for button in self.level_buttons.values():
             button.draw(self.screen)
         
     def draw_grid(self):
@@ -237,19 +377,14 @@ class Game:
             )
 
     def draw_game_over(self):
-        text = self.font.render(
-            "GAME OVER | R - restart",
-            True,
-            (0, 0, 0)
-        )
+        overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 150))
+        self.screen.blit(overlay, (0, 0))
 
-        text_rect = text.get_rect(
-            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
-        )
-
-        self.screen.blit(text, text_rect)
+        # Game Over окно
+        self.screen.blit(self.game_over_screen, self.game_over_rect)
     
-    def draw_score(self):
+    def draw_score(self): # TODO переделать 
         text = self.score_font.render(
             f"Score: {self.score}",
             True,
@@ -263,6 +398,95 @@ class Game:
         self.food = Food()
         self.score = 0
         self.game_over = False
+        if (pygame.mixer.music.get_busy() == False):
+            pygame.mixer.music.load(MAIN_THEME_PATH)
+            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.play(-1)
+
         
     def quit(self):
         pygame.quit()
+
+    def apply_level(self, level_key):
+        self.selected_level = level_key
+
+        level_data = LEVELS[level_key]
+
+        self.background = pygame.image.load(level_data["background"]).convert()
+        self.background = pygame.transform.scale(
+            self.background,
+            (WINDOW_WIDTH, WINDOW_HEIGHT)
+        )
+
+    def handle_leaderboard_events(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            for level_key, rect in self.leaderboard_tab_rects.items():
+                if rect.collidepoint(event.pos):
+                    self.active_leaderboard_tab = level_key
+
+    def draw_leaderboard(self):
+        self.screen.blit(self.menu_background, (0, 0))
+        self.screen.blit(self.leaderboard_panel, self.leaderboard_rect)
+
+        self.leaderboard_tab_rects = {}
+
+        tab_width = int(self.leaderboard_rect.width * 0.18)
+        tab_height = int(tab_width * self.leaderboard_tab.get_height() / self.leaderboard_tab.get_width())
+
+        start_x = self.leaderboard_rect.left + 70
+        start_y = self.leaderboard_rect.top + 135
+        gap = tab_width + 8
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        for index, level_key in enumerate(self.leaderboard_tabs):
+            x = start_x + index * gap
+            y = start_y
+
+            rect = pygame.Rect(x, y, tab_width, tab_height)
+            self.leaderboard_tab_rects[level_key] = rect
+
+            if level_key == self.active_leaderboard_tab:
+                tab_image = self.leaderboard_tab_active
+                text_color = (255, 220, 90)
+            elif rect.collidepoint(mouse_pos):
+                tab_image = self.leaderboard_tab_hover
+                text_color = (80, 45, 15)
+            else:
+                tab_image = self.leaderboard_tab
+                text_color = (60, 35, 15)
+
+            tab_image = pygame.transform.scale(tab_image, (tab_width, tab_height))
+            self.screen.blit(tab_image, rect)
+
+            text = self.leaderboard_font.render(
+                self.leaderboard_tab_names[level_key],
+                True,
+                text_color
+            )
+            text_rect = text.get_rect(center=rect.center)
+            self.screen.blit(text, text_rect)
+
+        fake_scores = [
+            ("1.", "Jan", "120"),
+            ("2.", "Player", "95"),
+            ("3.", "Snake", "70"),
+            ("4.", "Guest", "45"),
+            ("5.", "---", "0"),
+        ]
+
+        list_x = self.leaderboard_rect.left + 170
+        list_y = self.leaderboard_rect.top + 240
+        row_gap = 62
+
+        for index, record in enumerate(fake_scores):
+            place, name, score = record
+            y = list_y + index * row_gap
+
+            row_text = self.leaderboard_score_font.render(
+                f"{place}  {name:<10}  {score}",
+                True,
+                (70, 45, 20)
+            )
+
+            self.screen.blit(row_text, (list_x, y))

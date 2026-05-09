@@ -1,36 +1,67 @@
 import pygame
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-MUSIC_PATH = os.path.join(
+MAIN_THEME_PATH = os.path.join(
     BASE_DIR,
     "assets",
+    "common",
     "music",
-    "MainTheme.mp3"
+    "main_theme.mp3"
+)
+
+LEADERBOARD_THEME_PATH = os.path.join(
+    BASE_DIR,
+    "assets",
+    "common",
+    "music",
+    "leaderboard_theme.mp3"
+)
+
+FOOD_EAT_SOUND_PATH = os.path.join(
+    BASE_DIR,
+    "assets",
+    "common",
+    "sounds",
+    "food_eat.wav"
+)
+
+GAME_OVER_SOUND_PATH = os.path.join(
+    BASE_DIR,
+    "assets",
+    "common",
+    "sounds",
+    "game_over.wav"
 )
 
 #UI
 
 BUTTON_IMAGE_PATH = os.path.join(
     BASE_DIR, 
-    "assets", 
+    "assets",
+    "common",
     "images", 
-    "ui", 
+    "ui",
+    "buttons",
     "button.png"
 )
 
 BUTTON_HOVER_IMAGE_PATH = os.path.join(
     BASE_DIR, 
     "assets", 
+    "common",
     "images", 
-    "ui", 
+    "ui",
+    "buttons",
     "button_hover.png"
 )
 
 LOGO_IMAGE_PATH = os.path.join(
     BASE_DIR,
     "assets",
+    "common",
     "images",
     "ui",
+    "branding",
     "logo.png"
 )
 
@@ -39,37 +70,25 @@ LOGO_IMAGE_PATH = os.path.join(
 MENU_BACKGROUND_PATH = os.path.join(
     BASE_DIR,
     "assets",
+    "common",
     "images",
-    "background",
+    "backgrounds",
     "main_menu_background.png"
-)
-
-SUMMER_BACKGROUND_PATH = os.path.join(
-    BASE_DIR,
-    "assets",
-    "images",
-    "background",
-    "background_s1.png"
-)
-
-AUTUMN_BACKGROUND_PATH = os.path.join(
-    BASE_DIR,
-    "assets",
-    "images",
-    "background",
-    "background_s2.png"
 )
 
 APPLE_IMAGE_PATH = os.path.join(
     BASE_DIR,
     "assets",
+    "common",
     "images",
+    "food",
     "apple.png"
 )
 
 SNAKE_HEAD_PATH = os.path.join(
     BASE_DIR,
     "assets",
+    "common",
     "images",
     "snake",
     "snake_head.png"
@@ -78,10 +97,67 @@ SNAKE_HEAD_PATH = os.path.join(
 SNAKE_BODY_PATH = os.path.join(
     BASE_DIR,
     "assets",
+    "common",
     "images",
     "snake",
     "snake_body.png"
 )
+
+LEVEL_PANEL_PATH = os.path.join(
+    BASE_DIR, "assets", "common", "images", "ui", "panels", "level_panel.png"
+)
+
+LEVELS = {
+    "spring": {
+        "panel": os.path.join(BASE_DIR, "assets", "levels", "spring", "images", "panels", "panel.png"),
+        "panel_hover": os.path.join(BASE_DIR, "assets", "levels", "spring", "images", "panels", "panel_hover.png"),
+        "background": os.path.join(BASE_DIR, "assets", "levels", "spring", "images", "backgrounds", "background.png")
+    },
+    "summer": {
+        "panel": os.path.join(BASE_DIR, "assets", "levels", "summer", "images", "panels", "panel.png"),
+        "panel_hover": os.path.join(BASE_DIR, "assets", "levels", "summer", "images", "panels", "panel_hover.png"),
+        "background": os.path.join(BASE_DIR, "assets", "levels", "summer", "images", "backgrounds", "background.png"),
+    },
+    "autumn": {
+        "panel": os.path.join(BASE_DIR, "assets", "levels", "autumn", "images", "panels", "panel.png"),
+        "panel_hover": os.path.join(BASE_DIR, "assets", "levels", "autumn", "images", "panels", "panel_hover.png"),
+        "background": os.path.join(BASE_DIR, "assets", "levels", "autumn", "images", "backgrounds", "background.png"),
+    },
+    "winter": {
+        "panel": os.path.join(BASE_DIR, "assets", "levels", "winter", "images", "panels", "panel.png"),
+        "panel_hover": os.path.join(BASE_DIR, "assets", "levels", "winter", "images", "panels", "panel_hover.png"),
+        "background": os.path.join(BASE_DIR, "assets", "levels", "winter", "images", "backgrounds", "background.png"),
+    }
+}
+
+GAME_OVER_PANEL_PATH = os.path.join(
+    BASE_DIR,
+    "assets",
+    "common",
+    "images",
+    "ui",
+    "panels",
+    "game_over_panel.png"
+)
+
+LEADERBOARD_PANEL_PATH = os.path.join(
+    BASE_DIR, "assets", "common", "images", "ui", "leaderboard", "leaderboard.png"
+)
+
+LEADERBOARD_TAB_PATH = os.path.join(
+    BASE_DIR, "assets", "common", "images", "ui", "leaderboard", "leaderboard_tab.png"
+)
+
+LEADERBOARD_TAB_HOVER_PATH = os.path.join(
+    BASE_DIR, "assets", "common", "images", "ui", "leaderboard", "leaderboard_tab_hover.png"
+)
+
+LEADERBOARD_TAB_ACTIVE_PATH = os.path.join(
+    BASE_DIR, "assets", "common", "images", "ui", "leaderboard", "leaderboard_tab_active.png"
+)
+
+AUTHOR = "Тур Ян ІПЗ-113к9";
+
 
 pygame.init()
 
