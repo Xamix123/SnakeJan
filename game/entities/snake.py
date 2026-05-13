@@ -7,7 +7,9 @@ from settings import (
     OFFSET_X,
     OFFSET_Y,
     SNAKE_HEAD_PATH,
-    SNAKE_BODY_PATH
+    SNAKE_BODY_PATH,
+    SNAKE_HEAD_OPEN_PATH,
+    MOUTH_OPEN_DURATION
 )
 
 
@@ -23,7 +25,10 @@ class Snake:
         self.grow = False
 
         self.head_image = self.load_image(SNAKE_HEAD_PATH)
+        self.head_open_image = self.load_image(SNAKE_HEAD_OPEN_PATH)
         self.body_image = self.load_image(SNAKE_BODY_PATH)
+
+        self.mouth_open_until = 0
 
     def load_image(self, path):
         image = pygame.image.load(path).convert_alpha()
@@ -67,11 +72,39 @@ class Snake:
             y = OFFSET_Y + segment[1] * CELL_SIZE
 
             if index == 0:
-                image = self.head_image
+                image = self.get_rotated_head()
             else:
                 image = self.body_image
 
             screen.blit(image, (x, y))
+
+    def get_rotated_head(self):
+        current_image = self.get_current_head_image()
+
+        if self.direction == [1, 0]:
+            return current_image
+
+        if self.direction == [-1, 0]:
+            return pygame.transform.rotate(current_image, 180)
+
+        if self.direction == [0, -1]:
+            return pygame.transform.rotate(current_image, 90)
+
+        if self.direction == [0, 1]:
+            return pygame.transform.rotate(current_image, -90)
+
+        return current_image
+    
+    def open_mouth(self):
+        self.mouth_open_until = (
+            pygame.time.get_ticks() + MOUTH_OPEN_DURATION
+        )
+
+    def get_current_head_image(self):
+        if pygame.time.get_ticks() < self.mouth_open_until:
+            return self.head_open_image
+
+        return self.head_image    
 
     def check_collision(self):
         head = self.body[0]
