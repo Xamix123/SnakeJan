@@ -1,1 +1,4 @@
-pygame
+pygame==2.6.1
+ruff==0.12.11
+black==25.1.0
+mypy==1.17.1

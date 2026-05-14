@@ -1,15 +1,18 @@
 import pygame
 
-from settings import (
+from configs.display import (
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
+)
+
+from configs.ui import (
     LEADERBOARD_PANEL_PATH,
     LEADERBOARD_TAB_PATH,
     LEADERBOARD_TAB_HOVER_PATH,
     LEADERBOARD_TAB_ACTIVE_PATH,
 )
 
- 
+
 class Leaderboard:
     def __init__(
         self,
@@ -18,7 +21,7 @@ class Leaderboard:
         menu_background,
         leaderboard_font,
         leaderboard_score_font,
-        leaderboard_manager
+        leaderboard_manager,
     ):
         self.screen = screen
         self.asset_manager = asset_manager
@@ -45,8 +48,7 @@ class Leaderboard:
 
     def setup(self):
         self.panel = self.asset_manager.load_image(
-            "leaderboard_panel",
-            LEADERBOARD_PANEL_PATH
+            "leaderboard_panel", LEADERBOARD_PANEL_PATH
         )
 
         panel_width = int(WINDOW_WIDTH * 0.65)
@@ -55,27 +57,21 @@ class Leaderboard:
         )
 
         self.panel = self.asset_manager.scale_image(
-            self.panel,
-            (panel_width, panel_height)
+            self.panel, (panel_width, panel_height)
         )
 
-        self.rect = self.panel.get_rect(
-            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
-        )
+        self.rect = self.panel.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
 
         self.tab = self.asset_manager.load_image(
-            "leaderboard_tab",
-            LEADERBOARD_TAB_PATH
+            "leaderboard_tab", LEADERBOARD_TAB_PATH
         )
 
         self.tab_hover = self.asset_manager.load_image(
-            "leaderboard_tab_hover",
-            LEADERBOARD_TAB_HOVER_PATH
+            "leaderboard_tab_hover", LEADERBOARD_TAB_HOVER_PATH
         )
 
         self.tab_active = self.asset_manager.load_image(
-            "leaderboard_tab_active",
-            LEADERBOARD_TAB_ACTIVE_PATH
+            "leaderboard_tab_active", LEADERBOARD_TAB_ACTIVE_PATH
         )
 
     def draw(self):
@@ -118,16 +114,13 @@ class Leaderboard:
                 text_color = (60, 35, 15)
 
             tab_image = self.asset_manager.scale_image(
-                tab_image,
-                (tab_width, tab_height)
+                tab_image, (tab_width, tab_height)
             )
 
             self.screen.blit(tab_image, rect)
 
             text = self.leaderboard_font.render(
-                self.tab_names[level_key],
-                True,
-                text_color
+                self.tab_names[level_key], True, text_color
             )
 
             text_rect = text.get_rect(center=rect.center)
@@ -136,18 +129,18 @@ class Leaderboard:
     def draw_scores(self):
         panel = self.rect
         scores = self.leaderboard_manager.get_scores(self.active_tab)
-        #TODO MAKE CONSTANTS 
+        # TODO MAKE CONSTANTS
         row_count = 5
-        
+
         table_left = panel.left + int(panel.width * 0.15)
         table_right = panel.left + int(panel.width)
 
-        row_y = panel.top + int(panel.height * 0.35) 
+        row_y = panel.top + int(panel.height * 0.35)
         row_height = int(panel.height * 0.105)
         name_x = table_left + int(panel.width * 0.05)
         score_x = table_right - int(panel.width * 0.20)
 
-        text_color = (70, 45, 20) # TODO COLOR CONSTANT
+        text_color = (70, 45, 20)  # TODO COLOR CONSTANT
 
         for index in range(row_count):
             if index < len(scores):
@@ -160,35 +153,17 @@ class Leaderboard:
 
             y = row_y + index * row_height
 
-            row_rect = pygame.Rect(
-                table_left,
-                y,
-                table_right - table_left,
-                row_height
-            )
+            row_rect = pygame.Rect(table_left, y, table_right - table_left, row_height)
 
-            name_text = self.leaderboard_score_font.render(
-                name,
-                True,
-                text_color
-            )
+            name_text = self.leaderboard_score_font.render(name, True, text_color)
 
-            score_text = self.leaderboard_score_font.render(
-                score,
-                True,
-                text_color
-            )
-            name_rect = name_text.get_rect(
-                midleft=(name_x, row_rect.centery)
-            )
+            score_text = self.leaderboard_score_font.render(score, True, text_color)
+            name_rect = name_text.get_rect(midleft=(name_x, row_rect.centery))
 
-            score_rect = score_text.get_rect(
-                midright=(score_x, row_rect.centery)
-            )
+            score_rect = score_text.get_rect(midright=(score_x, row_rect.centery))
 
             self.screen.blit(name_text, name_rect)
             self.screen.blit(score_text, score_rect)
-
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:

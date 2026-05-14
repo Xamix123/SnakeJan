@@ -1,14 +1,18 @@
-from settings import (
-    AUTHOR,
+from configs.display import (
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
+)
+
+from configs.ui import (
+    AUTHOR,
     LOGO_IMAGE_PATH,
-    MENU_BACKGROUND_PATH,
     BUTTON_IMAGE_PATH,
     BUTTON_HOVER_IMAGE_PATH,
 )
 
-from ui.button import Button
+from configs.visual import MENU_BACKGROUND_PATH
+
+from game.ui.button import Button
 
 
 class Menu:
@@ -25,7 +29,7 @@ class Menu:
             "menu_background",
             MENU_BACKGROUND_PATH,
             (WINDOW_WIDTH, WINDOW_HEIGHT),
-            alpha=False
+            alpha=False,
         )
 
         logo = self.asset_manager.load_image("logo", LOGO_IMAGE_PATH)
@@ -34,22 +38,17 @@ class Menu:
         logo_height = int(logo_width * logo.get_height() / logo.get_width())
 
         self.logo_image = self.asset_manager.scale_image(
-            logo,
-            (logo_width, logo_height)
+            logo, (logo_width, logo_height)
         )
 
         self.logo_rect = self.logo_image.get_rect(
             center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 5)
         )
 
-        self.button_image = self.asset_manager.load_image(
-            "button",
-            BUTTON_IMAGE_PATH
-        )
+        self.button_image = self.asset_manager.load_image("button", BUTTON_IMAGE_PATH)
 
         self.button_hover_image = self.asset_manager.load_image(
-            "button_hover",
-            BUTTON_HOVER_IMAGE_PATH
+            "button_hover", BUTTON_HOVER_IMAGE_PATH
         )
 
         self.create_buttons()
@@ -71,7 +70,7 @@ class Menu:
                 button_height,
                 self.main_font,
                 self.button_image,
-                self.button_hover_image
+                self.button_hover_image,
             ),
             "leaderboard": Button(
                 "Leaderboard",
@@ -81,7 +80,7 @@ class Menu:
                 button_height,
                 self.main_font,
                 self.button_image,
-                self.button_hover_image
+                self.button_hover_image,
             ),
             "exit": Button(
                 "Exit",
@@ -91,7 +90,7 @@ class Menu:
                 button_height,
                 self.main_font,
                 self.button_image,
-                self.button_hover_image
+                self.button_hover_image,
             ),
         }
 
@@ -103,9 +102,7 @@ class Menu:
             button.draw(self.screen)
 
         author_text = self.author_font.render(
-            f"Created by {AUTHOR}",
-            True,
-            (255, 255, 255)
+            f"Created by {AUTHOR}", True, (255, 255, 255)
         )
 
         author_rect = author_text.get_rect(

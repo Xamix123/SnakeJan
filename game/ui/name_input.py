@@ -1,6 +1,9 @@
 import pygame
 
-from settings import WINDOW_WIDTH, WINDOW_HEIGHT
+from configs.display import (
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+)
 
 
 class NameInput:
@@ -53,19 +56,12 @@ class NameInput:
             return
 
         # Затемнение фона
-        overlay = pygame.Surface(
-            (WINDOW_WIDTH, WINDOW_HEIGHT),
-            pygame.SRCALPHA
-        )
+        overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
         self.screen.blit(overlay, (0, 0))
 
         # Заголовок
-        title_text = self.title_font.render(
-            "New High Score!",
-            True,
-            (255, 220, 90)
-        )
+        title_text = self.title_font.render("New High Score!", True, (255, 220, 90))
 
         title_rect = title_text.get_rect(
             center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 100)
@@ -75,9 +71,7 @@ class NameInput:
 
         # Подсказка
         subtitle_text = self.input_font.render(
-            "Enter your name:",
-            True,
-            (255, 255, 255)
+            "Enter your name:", True, (255, 255, 255)
         )
 
         subtitle_rect = subtitle_text.get_rect(
@@ -94,11 +88,7 @@ class NameInput:
         if not display_name.strip("|"):
             display_name = "|"
 
-        name_text = self.input_font.render(
-            display_name,
-            True,
-            (255, 255, 255)
-        )
+        name_text = self.input_font.render(display_name, True, (255, 255, 255))
 
         name_rect = name_text.get_rect(
             center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 20)
@@ -108,9 +98,7 @@ class NameInput:
 
         # Инструкция
         hint_text = self.input_font.render(
-            "Press Enter to confirm",
-            True,
-            (180, 180, 180)
+            "Press Enter to confirm", True, (180, 180, 180)
         )
 
         hint_rect = hint_text.get_rect(

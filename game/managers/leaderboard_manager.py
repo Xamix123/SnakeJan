@@ -1,7 +1,8 @@
 import json
 import os
 
-from settings import BASE_DIR
+from configs.paths import BASE_DIR
+
 
 class LeaderboardManager:
     def __init__(self):
@@ -45,15 +46,9 @@ class LeaderboardManager:
         return any(score > record["score"] for record in scores)
 
     def add_score(self, map_name, player_name, score):
-        self.data[map_name].append({
-            "name": player_name,
-            "score": score
-        })
+        self.data[map_name].append({"name": player_name, "score": score})
 
-        self.data[map_name].sort(
-            key=lambda record: record["score"],
-            reverse=True
-        )
+        self.data[map_name].sort(key=lambda record: record["score"], reverse=True)
 
         self.data[map_name] = self.data[map_name][:5]
         self.save()

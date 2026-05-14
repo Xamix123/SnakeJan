@@ -1,14 +1,15 @@
 import pygame
 
-from settings import (
+from configs.audio import (
     MAIN_THEME_PATH,
     LEADERBOARD_THEME_PATH,
     FOOD_EAT_SOUND_PATH,
     GAME_OVER_SOUND_PATH,
     DEFAULT_SOUND_VOLUME,
     DEFAULT_MUSIC_VOLUME,
-    MUSIC_LOOP
+    MUSIC_LOOP,
 )
+
 
 class SoundManager:
     def __init__(self):
@@ -26,7 +27,9 @@ class SoundManager:
     def play_music(self, path, loop=True):
         pygame.mixer.music.load(path)
         pygame.mixer.music.set_volume(DEFAULT_MUSIC_VOLUME)
-        pygame.mixer.music.play(MUSIC_LOOP if loop else 0) #TODO endless play music in loop
+        pygame.mixer.music.play(
+            MUSIC_LOOP if loop else 0
+        )  # TODO endless play music in loop
 
     def play_main_theme(self):
         self.play_music(MAIN_THEME_PATH)

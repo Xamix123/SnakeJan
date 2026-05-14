@@ -1,25 +1,24 @@
 import pygame
 
-from settings import (
+from configs.gameplay import (
     CELL_SIZE,
     GRID_COLUMNS,
     GRID_ROWS,
     OFFSET_X,
     OFFSET_Y,
+    MOUTH_OPEN_DURATION,
+)
+
+from configs.visual import (
     SNAKE_HEAD_PATH,
     SNAKE_BODY_PATH,
     SNAKE_HEAD_OPEN_PATH,
-    MOUTH_OPEN_DURATION
 )
 
 
 class Snake:
     def __init__(self):
-        self.body = [
-            [5, 5],
-            [4, 5],
-            [3, 5]
-        ]
+        self.body = [[5, 5], [4, 5], [3, 5]]
 
         self.direction = [1, 0]
         self.grow = False
@@ -94,17 +93,15 @@ class Snake:
             return pygame.transform.rotate(current_image, -90)
 
         return current_image
-    
+
     def open_mouth(self):
-        self.mouth_open_until = (
-            pygame.time.get_ticks() + MOUTH_OPEN_DURATION
-        )
+        self.mouth_open_until = pygame.time.get_ticks() + MOUTH_OPEN_DURATION
 
     def get_current_head_image(self):
         if pygame.time.get_ticks() < self.mouth_open_until:
             return self.head_open_image
 
-        return self.head_image    
+        return self.head_image
 
     def check_collision(self):
         head = self.body[0]

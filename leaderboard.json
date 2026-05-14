@@ -1,16 +1,16 @@
 {
     "spring": [
         {
-            "name": "---",
-            "score": 0
+            "name": "test",
+            "score": 190
         },
         {
-            "name": "---",
-            "score": 0
+            "name": "MakTraher",
+            "score": 150
         },
         {
-            "name": "---",
-            "score": 0
+            "name": "test",
+            "score": 120
         },
         {
             "name": "---",
@@ -23,8 +23,8 @@
     ],
     "summer": [
         {
-            "name": "---",
-            "score": 0
+            "name": "test",
+            "score": 10
         },
         {
             "name": "---",
@@ -45,12 +45,12 @@
     ],
     "autumn": [
         {
-            "name": "---",
-            "score": 0
+            "name": "test",
+            "score": 20
         },
         {
-            "name": "---",
-            "score": 0
+            "name": "test",
+            "score": 10
         },
         {
             "name": "---",
@@ -67,12 +67,12 @@
     ],
     "winter": [
         {
-            "name": "---",
-            "score": 0
+            "name": "test\\",
+            "score": 30
         },
         {
-            "name": "---",
-            "score": 0
+            "name": "r",
+            "score": 10
         },
         {
             "name": "---",

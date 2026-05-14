@@ -1,11 +1,14 @@
-from settings import (
+from configs.display import (
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
-    LEVEL_PANEL_PATH,
-    LEVELS,
 )
 
-from ui.level_button import LevelButton
+from configs.ui import LEVEL_PANEL_PATH
+
+from configs.levels import LEVELS
+
+from game.ui.level_button import LevelButton
+
 
 class LevelSelect:
     def __init__(self, screen, asset_manager, menu_background):
@@ -19,14 +22,10 @@ class LevelSelect:
 
     def setup(self):
         panel_width = int(WINDOW_WIDTH * 0.75)
-        panel_height = int(
-            panel_width * WINDOW_HEIGHT / WINDOW_WIDTH
-        )
+        panel_height = int(panel_width * WINDOW_HEIGHT / WINDOW_WIDTH)
 
         self.panel = self.asset_manager.load_scaled_image(
-            "level_panel",
-            LEVEL_PANEL_PATH,
-            (panel_width, panel_height)
+            "level_panel", LEVEL_PANEL_PATH, (panel_width, panel_height)
         )
 
         self.panel_rect = self.panel.get_rect(
@@ -34,7 +33,7 @@ class LevelSelect:
         )
 
         level_size = panel_width // 6
-        gap = 40
+        gap = 25
 
         levels = ["spring", "summer", "autumn", "winter"]
 
@@ -45,25 +44,18 @@ class LevelSelect:
 
         for index, level_key in enumerate(levels):
             image = self.asset_manager.load_image(
-                f"{level_key}_panel",
-                LEVELS[level_key]["panel"]
+                f"{level_key}_panel", LEVELS[level_key]["panel"]
             )
 
             hover_image = self.asset_manager.load_image(
-                f"{level_key}_panel_hover",
-                LEVELS[level_key]["panel_hover"]
+                f"{level_key}_panel_hover", LEVELS[level_key]["panel_hover"]
             )
 
             x = start_x + index * (level_size + gap)
             y = start_y
 
             self.level_buttons[level_key] = LevelButton(
-                level_key,
-                image,
-                hover_image,
-                x,
-                y,
-                level_size
+                level_key, image, hover_image, x, y, level_size
             )
 
     def draw(self):

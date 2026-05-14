@@ -4,7 +4,7 @@ import pygame
 class Obstacle:
     def __init__(self, position, size, image_path, cell_size, offset_x, offset_y):
         self.position = position  # [x, y] в клетках
-        self.size = size          # сколько клеток занимает, например 3
+        self.size = size  # сколько клеток занимает, например 3
         self.cell_size = cell_size
         self.offset_x = offset_x
         self.offset_y = offset_y
@@ -12,10 +12,7 @@ class Obstacle:
         image = pygame.image.load(image_path).convert_alpha()
         pixel_size = self.size * self.cell_size
 
-        self.image = pygame.transform.smoothscale(
-            image,
-            (pixel_size, pixel_size)
-        )
+        self.image = pygame.transform.smoothscale(image, (pixel_size, pixel_size))
 
         self.cells = self.get_cells()
 

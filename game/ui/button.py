@@ -2,7 +2,9 @@ import pygame
 
 
 class Button:
-    def __init__(self, text, center_x, center_y, width, height, font, image, hover_image):
+    def __init__(
+        self, text, center_x, center_y, width, height, font, image, hover_image
+    ):
         self.text = text
         self.font = font
 
