@@ -32,31 +32,58 @@ class LevelSelect:
             center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
         )
 
-        level_size = panel_width // 6
-        gap = 25
+        level_size = panel_width // 7
+        gap_x = 45
+        gap_y = 35
 
-        levels = ["spring", "summer", "autumn", "winter"]
+        level_rows = [
+            ["spring", "summer", "autumn"],
+            ["winter", "random"],
+        ]
 
-        total_width = level_size * len(levels) + gap * (len(levels) - 1)
+        # Общая высота блока кнопок
+        total_height = (
+            len(level_rows) * level_size
+            + (len(level_rows) - 1) * gap_y
+        )
 
-        start_x = self.panel_rect.centerx - total_width // 2
-        start_y = self.panel_rect.centery - level_size // 2
+        # Смещаем чуть ниже центра панели
+        start_y = self.panel_rect.centery - total_height // 2 + 35
 
-        for index, level_key in enumerate(levels):
-            image = self.asset_manager.load_image(
-                f"{level_key}_panel", LEVELS[level_key]["panel"]
+        for row_index, row in enumerate(level_rows):
+            # Ширина текущего ряда
+            row_width = (
+                len(row) * level_size
+                + (len(row) - 1) * gap_x
             )
 
-            hover_image = self.asset_manager.load_image(
-                f"{level_key}_panel_hover", LEVELS[level_key]["panel_hover"]
-            )
+            # Центрируем ряд по горизонтали
+            start_x = self.panel_rect.centerx - row_width // 2
 
-            x = start_x + index * (level_size + gap)
-            y = start_y
+            # Y текущего ряда
+            y = start_y + row_index * (level_size + gap_y)
 
-            self.level_buttons[level_key] = LevelButton(
-                level_key, image, hover_image, x, y, level_size
-            )
+            for index, level_key in enumerate(row):
+                image = self.asset_manager.load_image(
+                    f"{level_key}_panel",
+                    LEVELS[level_key]["panel"],
+                )
+
+                hover_image = self.asset_manager.load_image(
+                    f"{level_key}_panel_hover",
+                    LEVELS[level_key]["panel_hover"],
+                )
+
+                x = start_x + index * (level_size + gap_x)
+
+                self.level_buttons[level_key] = LevelButton(
+                    level_key,
+                    image,
+                    hover_image,
+                    x,
+                    y,
+                    level_size,
+                )
 
     def draw(self):
         self.screen.blit(self.menu_background, (0, 0))

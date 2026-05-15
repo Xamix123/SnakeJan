@@ -1,5 +1,36 @@
 from .paths import asset_path
 
+RANDOM_FOODS = [
+    asset_path("common", "images", "food", "apple.png"),
+    asset_path("common", "images", "food", "orange.png"),
+]
+
+RANDOM_OBSTACLE_POOL = [
+    {
+        "image": asset_path("common", "images", "obstacles", "rock.png"),
+        "size": 3,
+    },
+    {
+        "image": asset_path(
+            "common", "images", "obstacles", "rock_with_grass.png"
+        ),
+        "size": 4,
+    },
+    {
+        "image": asset_path("common", "images", "obstacles", "tree.png"),
+        "size": 6,
+    },
+    {
+        "image": asset_path(
+            "common", "images", "obstacles", "autumn_tree.png"
+        ),
+        "size": 8,
+    },
+    {
+        "image": asset_path("common", "images", "obstacles", "snowman.png"),
+        "size": 4,
+    },
+]
 
 LEVELS = {
     "spring": {
@@ -104,5 +135,19 @@ LEVELS = {
                 "size": 4,
             },
         ],
+    },
+    "random": {
+        "panel": asset_path(
+            "levels", "random", "images", "panels", "panel.png"
+        ),
+        "panel_hover": asset_path(
+            "levels", "random", "images", "panels", "panel_hover.png"
+        ),
+        "background": asset_path(
+            "levels", "random", "images", "backgrounds", "background.png"
+        ),
+        "foods": RANDOM_FOODS,
+        "obstacle_pool": RANDOM_OBSTACLE_POOL,
+        "obstacle_count": [2, 6],
     },
 }

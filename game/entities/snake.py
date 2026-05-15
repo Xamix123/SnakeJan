@@ -7,6 +7,8 @@ from configs.gameplay import (
     OFFSET_X,
     OFFSET_Y,
     MOUTH_OPEN_DURATION,
+    INITIAL_SNAKE_BODY,
+    INITIAL_DIRECTION
 )
 
 from configs.visual import (
@@ -17,23 +19,58 @@ from configs.visual import (
 
 
 class Snake:
-    def __init__(self):
-        self.body = [[5, 5], [4, 5], [3, 5]]
+    """
+    Represents the snake controlled by the player.
 
-        self.direction = [1, 0]
+    The class is responsible for:
+    - storing the snake body segments;
+    - handling movement and growth;
+    - changing movement direction;
+    - drawing the snake;
+    - animating the mouth opening;
+    - detecting collisions with itself.
+    """
+    def __init__(self):
+        """
+        Initialize the snake with its default state.
+        """
+        # Initial body segments in grid coordinates.
+        self.body = [segment.copy() for segment in INITIAL_SNAKE_BODY]
+        # Current movement direction.
+        self.direction = INITIAL_DIRECTION.copy()
+        # If True, the snake grows on the next move.
         self.grow = False
 
+        # Load snake images.
         self.head_image = self.load_image(SNAKE_HEAD_PATH)
         self.head_open_image = self.load_image(SNAKE_HEAD_OPEN_PATH)
         self.body_image = self.load_image(SNAKE_BODY_PATH)
 
+        # Timestamp until which the mouth remains open.
         self.mouth_open_until = 0
 
     def load_image(self, path):
+        """
+        Load and scale an image to fit one grid cell.
+
+        Args:
+            path (str): Path to the image file.
+
+        Returns:
+            pygame.Surface: Scaled image.
+        """
         image = pygame.image.load(path).convert_alpha()
         return pygame.transform.scale(image, (CELL_SIZE, CELL_SIZE))
 
     def change_direction(self, new_direction):
+        """
+        Change the snake movement direction.
+
+        Prevents reversing directly into the opposite direction.
+
+        Args:
+            new_direction (list[int]): New direction vector [x, y].
+        """
         if (
             new_direction[0] == -self.direction[0]
             and new_direction[1] == -self.direction[1]
@@ -43,33 +80,54 @@ class Snake:
         self.direction = new_direction
 
     def move(self):
+        """
+        Move the snake by one cell.
+
+        The snake wraps around screen edges.
+        If the grow flag is set, the tail is preserved.
+        Otherwise, the last segment is removed.
+        """
+        # Copy current head position.
         head = self.body[0].copy()
 
+        # Move head in the current direction.
         head[0] += self.direction[0]
         head[1] += self.direction[1]
 
+        # Horizontal wrapping.
         if head[0] >= GRID_COLUMNS:
             head[0] = 0
         elif head[0] < 0:
             head[0] = GRID_COLUMNS - 1
 
+        # Vertical wrapping.
         if head[1] >= GRID_ROWS:
             head[1] = 0
         elif head[1] < 0:
             head[1] = GRID_ROWS - 1
 
+        # Insert new head at the beginning of the body.
         self.body.insert(0, head)
 
+         # Remove tail unless the snake should grow.
         if not self.grow:
             self.body.pop()
         else:
             self.grow = False
 
     def draw(self, screen):
+        """
+        Draw the snake on the screen.
+
+        Args:
+            screen (pygame.Surface): Target surface for rendering.
+        """
         for index, segment in enumerate(self.body):
+            # Convert grid coordinates to pixel coordinates.
             x = OFFSET_X + segment[0] * CELL_SIZE
             y = OFFSET_Y + segment[1] * CELL_SIZE
 
+            # Draw head or body segment.
             if index == 0:
                 image = self.get_rotated_head()
             else:
@@ -78,6 +136,12 @@ class Snake:
             screen.blit(image, (x, y))
 
     def get_rotated_head(self):
+        """
+        Return the head image rotated according to movement direction.
+
+        Returns:
+            pygame.Surface: Rotated head image.
+        """
         current_image = self.get_current_head_image()
 
         if self.direction == [1, 0]:
@@ -95,14 +159,31 @@ class Snake:
         return current_image
 
     def open_mouth(self):
+        """
+        Open the snake mouth for a short animation period.
+        """
         self.mouth_open_until = pygame.time.get_ticks() + MOUTH_OPEN_DURATION
 
     def get_current_head_image(self):
+        """
+        Return the current head image.
+
+        Returns:
+            pygame.Surface:
+                Open-mouth image if animation is active,
+                otherwise the default head image.
+        """
         if pygame.time.get_ticks() < self.mouth_open_until:
             return self.head_open_image
 
         return self.head_image
 
     def check_collision(self):
+        """
+        Check whether the snake collided with itself.
+
+        Returns:
+            bool: True if the head intersects with the body.
+        """
         head = self.body[0]
         return head in self.body[1:]

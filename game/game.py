@@ -29,7 +29,28 @@ from configs.gameplay import (
 
 
 class Game:
+    """
+    Main application class.
+
+    This class coordinates all game systems and acts as the central
+    controller of the application.
+
+    Responsibilities:
+    - initialize pygame;
+    - create managers and UI components;
+    - run the main game loop;
+    - handle events;
+    - update game logic;
+    - render all screens;
+    - manage game state transitions.
+    """
     def __init__(self):
+        """
+        Initialize the game.
+
+        Creates the window, managers, UI components,
+        and initial game objects.
+        """
         pygame.init()
         self.state = GameState.MENU
 
@@ -83,12 +104,26 @@ class Game:
         )
 
     def init_managers(self):
+        """
+        Create and initialize all service managers.
+
+        Managers are responsible for:
+        - asset loading;
+        - audio playback;
+        - level loading;
+        - font creation.
+        """
         self.asset_manager = AssetManager()
         self.sound_manager = SoundManager()
         self.level_manager = LevelManager(self.asset_manager)
         self.font_manager = FontManager()
 
     def run(self):
+        """
+        Start the main game loop.
+
+        The loop continues until the application is closed.
+        """
         while self.running:
             self.handle_events()
             self.update()
@@ -98,6 +133,15 @@ class Game:
         self.quit()
 
     def handle_events(self):
+        """
+        Process all pygame events.
+
+        Handles:
+        - application close;
+        - keyboard input;
+        - mouse clicks;
+        - screen-specific interactions.
+        """
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -159,6 +203,14 @@ class Game:
                     self.sound_manager.play_leaderboard_theme(False)
 
     def handle_game_events(self, event):
+        """
+        Handle gameplay keyboard input.
+
+        Allows the player to change the snake direction.
+
+        Args:
+            event (pygame.event.Event): Pygame event.
+        """
         if event.type == pygame.KEYDOWN:
 
             if self.session.game_over:
@@ -177,6 +229,17 @@ class Game:
                 self.snake.change_direction([1, 0])
 
     def update(self):
+        """
+        Update the game state.
+
+        This method:
+        - controls snake movement timing;
+        - moves the snake;
+        - checks collisions;
+        - handles food consumption;
+        - updates the score;
+        - checks win conditions.
+        """
         if self.state != GameState.PLAYING:
             return
 
@@ -218,6 +281,16 @@ class Game:
             self.finish_game()
 
     def draw(self):
+        """
+        Render the current screen.
+
+        Depending on the current state, draws:
+        - main menu;
+        - level selection;
+        - gameplay;
+        - leaderboard;
+        - name input overlay.
+        """
         if self.state in (
             GameState.PLAYING,
             GameState.ENTER_NAME,
@@ -258,22 +331,36 @@ class Game:
         pygame.display.flip()
 
     def finish_game(self):
+        """
+        Handle end-of-game logic.
+
+        If the player achieved a high score,
+        show the name input overlay.
+
+        Otherwise:
+        - mark the session as game over;
+        - play the game over sound.
+        """
         map_name = self.level_manager.selected_level or DEFAULT_MAP_NAME
 
         if self.leaderboard_manager.is_high_score(map_name, self.session.score):
             self.name_input.start()
             self.state = GameState.ENTER_NAME
-
-            # если побил рекорд — сразу включаем музыку лидерборда
             self.sound_manager.play_leaderboard_theme(False)
 
         else:
             self.session.game_over = True
-
-            # если рекорда нет — проигрываем звук поражения
             self.sound_manager.play_game_over_sound()
 
     def restart(self):
+        """
+        Start a new game session.
+
+        Recreates:
+        - snake;
+        - food;
+        - session state.
+        """
         self.snake = Snake()
 
         self.food = Food(self.level_manager.get_food_image_path())
@@ -286,10 +373,21 @@ class Game:
             self.sound_manager.play_main_theme()
 
     def quit(self):
+        """
+        Shut down the application.
+
+        Stops music and closes pygame.
+        """
         self.sound_manager.stop_music()
         pygame.quit()
 
     def apply_level(self, level_key):
+        """
+        Load the selected level and create food.
+
+        Args:
+            level_key (str): Level identifier.
+        """
         self.level_manager.load_level(level_key)
 
         self.food = Food(self.level_manager.get_food_image_path())
