@@ -8,6 +8,7 @@ class AssetManager:
     The manager stores loaded images in memory to avoid loading
     the same file multiple times during the game.
     """
+
     def __init__(self):
         """
         Initialize the asset manager.

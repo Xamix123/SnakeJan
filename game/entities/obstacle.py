@@ -8,6 +8,7 @@ class Obstacle:
     An obstacle occupies a square area of size x size cells.
     The snake loses if it collides with any occupied cell.
     """
+
     def __init__(self, position, size, image_path, cell_size, offset_x, offset_y):
         """
         Initialize the obstacle.
@@ -20,9 +21,9 @@ class Obstacle:
             offset_x (int): Horizontal offset of the game field.
             offset_y (int): Vertical offset of the game field.
         """
-         # Position of the top-left corner in grid coordinates.
+        # Position of the top-left corner in grid coordinates.
         self.position = position
-         # Size of the obstacle in grid cells. 
+        # Size of the obstacle in grid cells.
         self.size = size
         # Rendering settings.
         self.cell_size = cell_size
@@ -62,7 +63,7 @@ class Obstacle:
         Args:
             screen (pygame.Surface): Target surface for rendering.
         """
-         # Convert grid coordinates to pixel coordinates.
+        # Convert grid coordinates to pixel coordinates.
         x = self.offset_x + self.position[0] * self.cell_size
         y = self.offset_y + self.position[1] * self.cell_size
 

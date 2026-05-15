@@ -11,9 +11,7 @@ RANDOM_OBSTACLE_POOL = [
         "size": 3,
     },
     {
-        "image": asset_path(
-            "common", "images", "obstacles", "rock_with_grass.png"
-        ),
+        "image": asset_path("common", "images", "obstacles", "rock_with_grass.png"),
         "size": 4,
     },
     {
@@ -21,9 +19,7 @@ RANDOM_OBSTACLE_POOL = [
         "size": 6,
     },
     {
-        "image": asset_path(
-            "common", "images", "obstacles", "autumn_tree.png"
-        ),
+        "image": asset_path("common", "images", "obstacles", "autumn_tree.png"),
         "size": 8,
     },
     {
@@ -60,7 +56,9 @@ LEVELS = {
                 "size": 3,
             },
             {
-                "image": asset_path("common", "images", "obstacles", "rock_with_grass.png"),
+                "image": asset_path(
+                    "common", "images", "obstacles", "rock_with_grass.png"
+                ),
                 "position": [13, 12],
                 "size": 4,
             },
@@ -137,9 +135,7 @@ LEVELS = {
         ],
     },
     "random": {
-        "panel": asset_path(
-            "levels", "random", "images", "panels", "panel.png"
-        ),
+        "panel": asset_path("levels", "random", "images", "panels", "panel.png"),
         "panel_hover": asset_path(
             "levels", "random", "images", "panels", "panel_hover.png"
         ),

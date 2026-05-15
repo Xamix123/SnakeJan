@@ -22,6 +22,7 @@ class SoundManager:
     - playing sound effects;
     - controlling music and sound volumes.
     """
+
     def __init__(self):
         """
         Initialize the sound manager and preload sound effects.
@@ -30,7 +31,7 @@ class SoundManager:
         pygame.mixer.init()
         # Identifier of the currently playing music track.
         self.current_music = None
-        
+
         # Preload sound effects.
         self.sounds = {
             "food": pygame.mixer.Sound(FOOD_EAT_SOUND_PATH),
@@ -51,9 +52,8 @@ class SoundManager:
         """
         pygame.mixer.music.load(path)
         pygame.mixer.music.set_volume(DEFAULT_MUSIC_VOLUME)
-        pygame.mixer.music.play(
-            MUSIC_LOOP if loop else 0
-        )
+        pygame.mixer.music.play(MUSIC_LOOP if loop else 0)
+
     def play_main_theme(self):
         """
         Play the main menu theme.

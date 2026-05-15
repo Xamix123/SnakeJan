@@ -18,6 +18,7 @@ class GameOverOverlay:
     - a semi-transparent dark background;
     - a centered game over panel image.
     """
+
     def __init__(self):
         """
         Initialize the game over overlay.
@@ -29,10 +30,7 @@ class GameOverOverlay:
         self.rect = self.image.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
 
         # Create a semi-transparent dark overlay.
-        self.overlay = pygame.Surface(
-            (WINDOW_WIDTH, WINDOW_HEIGHT), 
-            pygame.SRCALPHA
-        )
+        self.overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
         # RGBA color: black with 150 alpha.
         self.overlay.fill(OVERLAY_COLOR)
 

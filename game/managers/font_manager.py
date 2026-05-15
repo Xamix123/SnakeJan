@@ -8,6 +8,7 @@ class FontManager:
     Centralizing font initialization in one place makes it easier
     to maintain a consistent visual style and adjust font sizes.
     """
+
     def __init__(self):
         """
         Initialize all fonts used throughout the application.

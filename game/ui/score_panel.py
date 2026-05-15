@@ -43,9 +43,7 @@ class ScorePanel:
         Load and scale the score panel image.
         """
         # Calculate panel width as a fraction of the window width.
-        panel_width = int(
-            WINDOW_WIDTH * SCORE_PANEL_WIDTH_RATIO
-        )
+        panel_width = int(WINDOW_WIDTH * SCORE_PANEL_WIDTH_RATIO)
 
         # Load the original panel image.
         original_panel = self.asset_manager.load_image(
@@ -55,9 +53,7 @@ class ScorePanel:
 
         # Preserve the original aspect ratio.
         panel_height = int(
-            panel_width
-            * original_panel.get_height()
-            / original_panel.get_width()
+            panel_width * original_panel.get_height() / original_panel.get_width()
         )
 
         # Create the scaled panel image.
@@ -67,9 +63,7 @@ class ScorePanel:
         )
 
         # Position the panel in the top-right corner.
-        self.rect = self.panel.get_rect(
-            topright=(WINDOW_WIDTH, 0)
-        )
+        self.rect = self.panel.get_rect(topright=(WINDOW_WIDTH, 0))
 
     def draw(self, score):
         """
@@ -89,20 +83,12 @@ class ScorePanel:
         )
 
         # Calculate score text position relative to the panel.
-        text_x = (
-            self.rect.left
-            + self.rect.width * SCORE_TEXT_OFFSET_X_RATIO
-        )
+        text_x = self.rect.left + self.rect.width * SCORE_TEXT_OFFSET_X_RATIO
 
-        text_y = (
-            self.rect.top
-            + self.rect.height * SCORE_TEXT_OFFSET_Y_RATIO
-        )
+        text_y = self.rect.top + self.rect.height * SCORE_TEXT_OFFSET_Y_RATIO
 
         # Center the score text at the calculated position.
-        score_text_rect = score_text.get_rect(
-            center=(text_x, text_y)
-        )
+        score_text_rect = score_text.get_rect(center=(text_x, text_y))
 
         # Draw the score text.
         self.screen.blit(score_text, score_text_rect)

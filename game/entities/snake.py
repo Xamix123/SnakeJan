@@ -8,7 +8,7 @@ from configs.gameplay import (
     OFFSET_Y,
     MOUTH_OPEN_DURATION,
     INITIAL_SNAKE_BODY,
-    INITIAL_DIRECTION
+    INITIAL_DIRECTION,
 )
 
 from configs.visual import (
@@ -30,6 +30,7 @@ class Snake:
     - animating the mouth opening;
     - detecting collisions with itself.
     """
+
     def __init__(self):
         """
         Initialize the snake with its default state.
@@ -109,7 +110,7 @@ class Snake:
         # Insert new head at the beginning of the body.
         self.body.insert(0, head)
 
-         # Remove tail unless the snake should grow.
+        # Remove tail unless the snake should grow.
         if not self.grow:
             self.body.pop()
         else:

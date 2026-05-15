@@ -42,20 +42,14 @@ class LevelSelect:
         ]
 
         # Общая высота блока кнопок
-        total_height = (
-            len(level_rows) * level_size
-            + (len(level_rows) - 1) * gap_y
-        )
+        total_height = len(level_rows) * level_size + (len(level_rows) - 1) * gap_y
 
         # Смещаем чуть ниже центра панели
         start_y = self.panel_rect.centery - total_height // 2 + 35
 
         for row_index, row in enumerate(level_rows):
             # Ширина текущего ряда
-            row_width = (
-                len(row) * level_size
-                + (len(row) - 1) * gap_x
-            )
+            row_width = len(row) * level_size + (len(row) - 1) * gap_x
 
             # Центрируем ряд по горизонтали
             start_x = self.panel_rect.centerx - row_width // 2

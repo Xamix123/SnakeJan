@@ -107,14 +107,10 @@ class Leaderboard:
             LEADERBOARD_PANEL_PATH,
         )
 
-        panel_width = int(
-            WINDOW_WIDTH * LEADERBOARD_PANEL_WIDTH_RATIO
-        )
+        panel_width = int(WINDOW_WIDTH * LEADERBOARD_PANEL_WIDTH_RATIO)
 
         panel_height = int(
-            panel_width
-            * self.panel.get_height()
-            / self.panel.get_width()
+            panel_width * self.panel.get_height() / self.panel.get_width()
         )
 
         self.panel = self.asset_manager.scale_image(
@@ -166,31 +162,17 @@ class Leaderboard:
 
         tab_count = len(self.tabs)
 
-        tab_width = int(
-            panel.width * LEADERBOARD_TAB_WIDTH_RATIO
-        )
+        tab_width = int(panel.width * LEADERBOARD_TAB_WIDTH_RATIO)
 
-        tab_height = int(
-            tab_width
-            * self.tab.get_height()
-            / self.tab.get_width()
-        )
+        tab_height = int(tab_width * self.tab.get_height() / self.tab.get_width())
 
-        tab_gap = int(
-            panel.width * LEADERBOARD_TAB_GAP_RATIO
-        )
+        tab_gap = int(panel.width * LEADERBOARD_TAB_GAP_RATIO)
 
-        total_tabs_width = (
-            tab_count * tab_width
-            + (tab_count - 1) * tab_gap
-        )
+        total_tabs_width = tab_count * tab_width + (tab_count - 1) * tab_gap
 
         start_x = panel.centerx - total_tabs_width // 2
 
-        start_y = (
-            panel.top
-            + int(panel.height * LEADERBOARD_TAB_OFFSET_Y_RATIO)
-        )
+        start_y = panel.top + int(panel.height * LEADERBOARD_TAB_OFFSET_Y_RATIO)
 
         for index, level_key in enumerate(self.tabs):
             x = start_x + index * (tab_width + tab_gap)
@@ -228,9 +210,7 @@ class Leaderboard:
                 text_color,
             )
 
-            text_rect = text.get_rect(
-                center=rect.center
-            )
+            text_rect = text.get_rect(center=rect.center)
 
             self.screen.blit(text, text_rect)
 
@@ -239,38 +219,19 @@ class Leaderboard:
         Draw top scores for the selected tab.
         """
         panel = self.rect
-        scores = self.leaderboard_manager.get_scores(
-            self.active_tab
-        )
+        scores = self.leaderboard_manager.get_scores(self.active_tab)
 
-        table_left = (
-            panel.left
-            + int(panel.width * LEADERBOARD_TABLE_LEFT_RATIO)
-        )
+        table_left = panel.left + int(panel.width * LEADERBOARD_TABLE_LEFT_RATIO)
 
-        table_right = (
-            panel.left
-            + int(panel.width * LEADERBOARD_TABLE_RIGHT_RATIO)
-        )
+        table_right = panel.left + int(panel.width * LEADERBOARD_TABLE_RIGHT_RATIO)
 
-        row_y = (
-            panel.top
-            + int(panel.height * LEADERBOARD_TABLE_TOP_RATIO)
-        )
+        row_y = panel.top + int(panel.height * LEADERBOARD_TABLE_TOP_RATIO)
 
-        row_height = int(
-            panel.height * LEADERBOARD_ROW_HEIGHT_RATIO
-        )
+        row_height = int(panel.height * LEADERBOARD_ROW_HEIGHT_RATIO)
 
-        name_x = (
-            table_left
-            + int(panel.width * LEADERBOARD_NAME_OFFSET_X_RATIO)
-        )
+        name_x = table_left + int(panel.width * LEADERBOARD_NAME_OFFSET_X_RATIO)
 
-        score_x = (
-            table_right
-            - int(panel.width * LEADERBOARD_SCORE_OFFSET_X_RATIO)
-        )
+        score_x = table_right - int(panel.width * LEADERBOARD_SCORE_OFFSET_X_RATIO)
 
         for index in range(LEADERBOARD_ROW_COUNT):
             if index < len(scores):
@@ -302,13 +263,9 @@ class Leaderboard:
                 LEADERBOARD_SCORE_TEXT_COLOR,
             )
 
-            name_rect = name_text.get_rect(
-                midleft=(name_x, row_rect.centery)
-            )
+            name_rect = name_text.get_rect(midleft=(name_x, row_rect.centery))
 
-            score_rect = score_text.get_rect(
-                midright=(score_x, row_rect.centery)
-            )
+            score_rect = score_text.get_rect(midright=(score_x, row_rect.centery))
 
             self.screen.blit(name_text, name_rect)
             self.screen.blit(score_text, score_rect)
@@ -320,10 +277,7 @@ class Leaderboard:
         Args:
             event (pygame.event.Event): Pygame event.
         """
-        if (
-            event.type == pygame.MOUSEBUTTONDOWN
-            and event.button == 1
-        ):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             for level_key, rect in self.tab_rects.items():
                 if rect.collidepoint(event.pos):
                     self.active_tab = level_key

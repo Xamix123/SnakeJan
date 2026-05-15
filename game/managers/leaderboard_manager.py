@@ -15,6 +15,7 @@ class LeaderboardManager:
     - checking whether a score is a high score;
     - adding new records to the leaderboard.
     """
+
     def __init__(self):
         """
         Initialize the leaderboard manager.

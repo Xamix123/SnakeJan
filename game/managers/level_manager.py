@@ -26,6 +26,7 @@ class LevelManager:
     - checking obstacle collisions;
     - checking the win condition.
     """
+
     def __init__(self, asset_manager):
         """
         Initialize the level manager.
@@ -109,7 +110,7 @@ class LevelManager:
         Returns:
             list[Obstacle]: Created obstacles.
         """
-        
+
         obstacles = []
 
         for obstacle_data in obstacles_data:
@@ -171,7 +172,7 @@ class LevelManager:
                 obstacles.append(new_obstacle)
 
         return obstacles
-    
+
     def is_obstacle_place_free(self, new_obstacle, existing_obstacles):
         """
         Check whether an obstacle can be placed.
@@ -193,7 +194,7 @@ class LevelManager:
                     return False
 
         return True
-    
+
     def get_food_image_path(self):
         """
         Return the food image path for the current level.

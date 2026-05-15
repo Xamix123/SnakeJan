@@ -9,6 +9,7 @@ from configs.gameplay import (
     OFFSET_Y,
 )
 
+
 class Food:
     """
     Represents a food object that appears on the game field.
@@ -16,6 +17,7 @@ class Food:
     The food is displayed as an image and can respawn at a random free
     cell that is not occupied by the snake or obstacles.
     """
+
     def __init__(self, image_path):
         """
         Initialize the food object.

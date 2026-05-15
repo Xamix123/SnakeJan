@@ -1,8 +1,6 @@
 import pygame
 
-from configs.colors import (
-    BUTTON_TEXT_COLOR
-)
+from configs.colors import BUTTON_TEXT_COLOR
 
 
 class Button:
@@ -63,7 +61,7 @@ class Button:
 
         # Select the appropriate image depending on hover state.
         image = self.hover_image if self.rect.collidepoint(mouse_pos) else self.image
-        
+
         # Draw the button background.
         screen.blit(image, self.rect)
 

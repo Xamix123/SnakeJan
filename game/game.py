@@ -44,6 +44,7 @@ class Game:
     - render all screens;
     - manage game state transitions.
     """
+
     def __init__(self):
         """
         Initialize the game.

@@ -9,7 +9,7 @@ from configs.colors import (
     OVERLAY_COLOR,
     HIGH_SCORE_TITLE_COLOR,
     NAME_INPUT_TEXT_COLOR,
-    NAME_INPUT_HINT_COLOR
+    NAME_INPUT_HINT_COLOR,
 )
 
 from configs.ui import (
@@ -31,6 +31,7 @@ class NameInput:
     The overlay allows the player to enter their name
     after achieving a new high score.
     """
+
     def __init__(
         self,
         screen,
@@ -123,7 +124,9 @@ class NameInput:
         self.screen.blit(overlay, (0, 0))
 
         # Render the title.
-        title_text = self.title_font.render("New High Score!", True, (HIGH_SCORE_TITLE_COLOR))
+        title_text = self.title_font.render(
+            "New High Score!", True, (HIGH_SCORE_TITLE_COLOR)
+        )
 
         title_rect = title_text.get_rect(
             center=(
@@ -150,11 +153,10 @@ class NameInput:
 
         # Prepare the displayed name.
         display_name = self.player_name
-        
+
         # Show a blinking cursor.
         if (
-            pygame.time.get_ticks()
-            % NAME_INPUT_CURSOR_BLINK_INTERVAL
+            pygame.time.get_ticks() % NAME_INPUT_CURSOR_BLINK_INTERVAL
             < NAME_INPUT_CURSOR_VISIBLE_TIME
         ):
             display_name += "|"

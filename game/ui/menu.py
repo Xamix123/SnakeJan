@@ -70,15 +70,9 @@ class Menu:
         )
 
         # Calculate logo size.
-        logo_width = int(
-            WINDOW_WIDTH * MENU_LOGO_WIDTH_RATIO
-        )
+        logo_width = int(WINDOW_WIDTH * MENU_LOGO_WIDTH_RATIO)
 
-        logo_height = int(
-            logo_width
-            * logo.get_height()
-            / logo.get_width()
-        )
+        logo_height = int(logo_width * logo.get_height() / logo.get_width())
 
         # Scale logo.
         self.logo_image = self.asset_manager.scale_image(
@@ -111,20 +105,13 @@ class Menu:
         """
         Create menu buttons.
         """
-        button_width = int(
-            WINDOW_WIDTH * MENU_BUTTON_WIDTH_RATIO
-        )
+        button_width = int(WINDOW_WIDTH * MENU_BUTTON_WIDTH_RATIO)
 
-        button_height = int(
-            WINDOW_HEIGHT * MENU_BUTTON_HEIGHT_RATIO
-        )
+        button_height = int(WINDOW_HEIGHT * MENU_BUTTON_HEIGHT_RATIO)
 
         center_x = WINDOW_WIDTH // 2
 
-        start_y = (
-            WINDOW_HEIGHT // 2
-            + MENU_BUTTON_START_OFFSET_Y
-        )
+        start_y = WINDOW_HEIGHT // 2 + MENU_BUTTON_START_OFFSET_Y
 
         gap = button_height + MENU_BUTTON_GAP
 
