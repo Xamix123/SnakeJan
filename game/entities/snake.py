@@ -37,8 +37,13 @@ class Snake:
         """
         # Initial body segments in grid coordinates.
         self.body = [segment.copy() for segment in INITIAL_SNAKE_BODY]
+
         # Current movement direction.
         self.direction = INITIAL_DIRECTION.copy()
+
+        # Prevents multiple direction changes before the next move.
+        self.direction_changed = False
+
         # If True, the snake grows on the next move.
         self.grow = False
 
@@ -67,11 +72,17 @@ class Snake:
         """
         Change the snake movement direction.
 
-        Prevents reversing directly into the opposite direction.
+        Only one direction change is allowed between moves.
+        Direct reversal is not allowed.
 
         Args:
             new_direction (list[int]): New direction vector [x, y].
         """
+        # Ignore additional direction changes before the next move.
+        if self.direction_changed:
+            return
+
+        # Prevent reversing into the opposite direction.
         if (
             new_direction[0] == -self.direction[0]
             and new_direction[1] == -self.direction[1]
@@ -79,6 +90,7 @@ class Snake:
             return
 
         self.direction = new_direction
+        self.direction_changed = True
 
     def move(self):
         """
@@ -115,6 +127,9 @@ class Snake:
             self.body.pop()
         else:
             self.grow = False
+
+        # Allow changing direction again after movement.
+        self.direction_changed = False
 
     def draw(self, screen):
         """
