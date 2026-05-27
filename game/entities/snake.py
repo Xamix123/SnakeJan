@@ -31,10 +31,17 @@ class Snake:
     - detecting collisions with itself.
     """
 
-    def __init__(self):
+    def __init__(self, asset_manager):
         """
         Initialize the snake with its default state.
+
+        Args:
+            asset_manager (AssetManager):
+                Shared manager used for loading and caching images.
         """
+        # Save asset manager reference.
+        self.asset_manager = asset_manager
+
         # Initial body segments in grid coordinates.
         self.body = [segment.copy() for segment in INITIAL_SNAKE_BODY]
 
@@ -47,26 +54,27 @@ class Snake:
         # If True, the snake grows on the next move.
         self.grow = False
 
-        # Load snake images.
-        self.head_image = self.load_image(SNAKE_HEAD_PATH)
-        self.head_open_image = self.load_image(SNAKE_HEAD_OPEN_PATH)
-        self.body_image = self.load_image(SNAKE_BODY_PATH)
+        # Load and scale snake images.
+        self.head_image = self.asset_manager.load_scaled_image(
+            "snake_head",
+            SNAKE_HEAD_PATH,
+            (CELL_SIZE, CELL_SIZE),
+        )
+
+        self.head_open_image = self.asset_manager.load_scaled_image(
+            "snake_head_open",
+            SNAKE_HEAD_OPEN_PATH,
+            (CELL_SIZE, CELL_SIZE),
+        )
+
+        self.body_image = self.asset_manager.load_scaled_image(
+            "snake_body",
+            SNAKE_BODY_PATH,
+            (CELL_SIZE, CELL_SIZE),
+        )
 
         # Timestamp until which the mouth remains open.
         self.mouth_open_until = 0
-
-    def load_image(self, path):
-        """
-        Load and scale an image to fit one grid cell.
-
-        Args:
-            path (str): Path to the image file.
-
-        Returns:
-            pygame.Surface: Scaled image.
-        """
-        image = pygame.image.load(path).convert_alpha()
-        return pygame.transform.scale(image, (CELL_SIZE, CELL_SIZE))
 
     def change_direction(self, new_direction):
         """
@@ -178,7 +186,9 @@ class Snake:
         """
         Open the snake mouth for a short animation period.
         """
-        self.mouth_open_until = pygame.time.get_ticks() + MOUTH_OPEN_DURATION
+        self.mouth_open_until = (
+            pygame.time.get_ticks() + MOUTH_OPEN_DURATION
+        )
 
     def get_current_head_image(self):
         """

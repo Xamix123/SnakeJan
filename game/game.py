@@ -74,7 +74,7 @@ class Game:
         self.game_over_overlay = GameOverOverlay()
         self.clock = pygame.time.Clock()
         self.running = True
-        self.snake = Snake()
+        self.snake = Snake(self.asset_manager)
         self.food = None
 
         self.session = GameSession()
@@ -362,7 +362,7 @@ class Game:
         - food;
         - session state.
         """
-        self.snake = Snake()
+        self.snake = Snake(self.asset_manager)
 
         self.food = Food(self.level_manager.get_food_image_path())
 
